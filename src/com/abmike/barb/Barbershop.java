@@ -53,6 +53,7 @@ public class Barbershop {
         }
 
         private void insertVIP(Client vipClient, int index){
+        //created a temporary linked list
         LinkedList<Client> tempList=new LinkedList<>(waitingChairs);
         tempList.add(index,vipClient);
         waitingChairs=tempList;
