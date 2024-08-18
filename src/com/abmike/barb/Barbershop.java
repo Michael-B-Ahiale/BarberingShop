@@ -11,6 +11,13 @@ public class Barbershop {
     private int ordCount;
     private int vipCount;
 
+    public Barbershop(int maxWaitingChairs) {
+        this.maxWaitingChairs = maxWaitingChairs;
+        this.waitingChairs = new LinkedList<>();
+        this.ordCount = 0;
+        this.vipCount = 0;
+    }
+
     //Method to add a client based on the type
     public boolean addClient(String type){
         Client newClient;
@@ -25,10 +32,50 @@ public class Barbershop {
             return true;
         }else if(waitingChairs.size()<maxWaitingChairs){
             if(newClient.isVIP()){
-
+                int vipIndex=findLastVIPIndex();
+                insertVIP(newClient,vipIndex);
+            }else{
+                waitingChairs.offer(newClient);
             }
+            return true;
         }
+        return false;
     }
+        private int findLastVIPIndex(){
+        int index=0;
+        for(Client client:waitingChairs){
+            if(!client.isVIP()){
+                break;
+            }
+            index++;
+        }
+        return index;
+        }
 
+        private void insertVIP(Client vipClient, int index){
+        LinkedList<Client> tempList=new LinkedList<>(waitingChairs);
+        tempList.add(index,vipClient);
+        waitingChairs=tempList;
+        }
+
+        public Client removeClient(){
+        Client leavingClient=mainChair;
+        mainChair=waitingChairs.poll();
+        return leavingClient;
+        }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("[");
+        if (mainChair != null) {
+            sb.append(mainChair);
+        }
+        for (Client client : waitingChairs) {
+            sb.append(", ").append(client);
+        }
+        sb.append("]");
+        return sb.toString();
+    }
 
 }
